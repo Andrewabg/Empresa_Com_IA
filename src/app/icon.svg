@@ -1,0 +1,39 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!--
+    Favicon Awave Agents: o selo da marca. A Onda traçada no gradiente
+    teal para violeta (as mesmas cores da Onda viva, wave-from para wave-to)
+    sobre um tile escuro. Espelha o BrandMark do Rail, mas com traço mais
+    grosso e halo pra ler nítido a 16px. Sem filtros (compatível com
+    qualquer renderer de aba).
+  -->
+  <defs>
+    <linearGradient id="awave-tile" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#181A20"/>
+      <stop offset="1" stop-color="#0A0B0D"/>
+    </linearGradient>
+    <linearGradient id="awave-wave" x1="5" y1="16" x2="27" y2="16" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#28E0C8"/>
+      <stop offset="1" stop-color="#7C5CFF"/>
+    </linearGradient>
+    <clipPath id="awave-clip"><rect x="1" y="1" width="30" height="30" rx="8"/></clipPath>
+  </defs>
+
+  <!-- tile -->
+  <rect x="1" y="1" width="30" height="30" rx="8" fill="url(#awave-tile)"/>
+
+  <!-- aura de atmosfera (contida no tile) -->
+  <g clip-path="url(#awave-clip)">
+    <circle cx="9" cy="8" r="10" fill="#28E0C8" fill-opacity="0.12"/>
+    <circle cx="24" cy="24" r="11" fill="#7C5CFF" fill-opacity="0.14"/>
+  </g>
+
+  <!-- borda hairline -->
+  <rect x="1.5" y="1.5" width="29" height="29" rx="7.5" stroke="#FFFFFF" stroke-opacity="0.10"/>
+
+  <!-- halo da Onda -->
+  <path d="M5 16 C 7.3 9.4, 10 9.4, 12 16 S 16.7 22.6, 18.7 16 S 23.7 9.4, 27 16"
+        stroke="url(#awave-wave)" stroke-width="5" stroke-opacity="0.22" stroke-linecap="round" fill="none"/>
+  <!-- a Onda -->
+  <path d="M5 16 C 7.3 9.4, 10 9.4, 12 16 S 16.7 22.6, 18.7 16 S 23.7 9.4, 27 16"
+        stroke="url(#awave-wave)" stroke-width="2.6" stroke-linecap="round" fill="none"/>
+</svg>

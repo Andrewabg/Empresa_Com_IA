@@ -1,0 +1,301 @@
+LICENÇA DE USO — AWAVE AGENTS
+Versão 2.0 (2026)
+
+Copyright (c) 2024–2026 AWAVE CONSULTORIA E DESENVOLVIMENTO LTDA
+(CNPJ 61.847.563/0001-04). Todos os direitos reservados.
+
+Este software, denominado "Awave Agents" (doravante "o Software"), é licenciado —
+e não vendido — nos termos desta Licença de Uso (a "Licença"), inspirada no modelo
+fair-source (uso justo). A regra que rege toda esta Licença é simples:
+
+        VOCÊ PODE FATURAR COM O SERVIÇO. NÃO PODE FATURAR COM O SOFTWARE.
+
+Ou seja: o Licenciado pode usar o Software comercialmente para atender clientes e
+entregar soluções — inclusive a empresas e inclusive operando-o como SaaS, cobrando
+o que quiser por isso —, desde que ele próprio mantenha o controle do Software (o
+código, o repositório e a infraestrutura permanecem com ele, e o cliente apenas
+consome o resultado). O que NÃO é permitido é entregar o Software em si a terceiros —
+o código, uma cópia instalável, um template, um kit ou o material de um
+curso/infoproduto — de modo que o terceiro obtenha a sua própria cópia do Software
+(original ou derivado) e possa instalar, operar, revender ou redistribuir o Software
+por conta própria.
+
+Ao instalar, copiar, acessar, executar ou de qualquer forma utilizar o Software, o
+Licenciado declara ter lido, entendido e aceito integralmente esta Licença. Caso não
+concorde com qualquer de seus termos, não instale nem utilize o Software.
+
+──────────────────────────────────────────────────────────────────
+
+1. DEFINIÇÕES
+
+   1.1. "Software" — o template Awave Agents em sua totalidade: código-fonte,
+        configurações, prompts de sistema, definições de agentes, starter kits (incluindo
+        arquivos SKILL.md), documentação, recursos, artefatos de build e quaisquer
+        atualizações fornecidas pela Titular.
+   1.2. "Titular" — AWAVE CONSULTORIA E DESENVOLVIMENTO LTDA, inscrita no CNPJ sob o nº
+        61.847.563/0001-04, com sede na SAUS Quadra 4, Bloco A, Sala 513/parte 828, Asa
+        Sul, Brasília/DF, CEP 70.070-938, detentora dos direitos patrimoniais de
+        propriedade intelectual sobre o Software.
+   1.3. "Licenciado" — a pessoa física ou jurídica que adquiriu uma Cópia Licenciada junto
+        à Titular ou a canal por ela expressamente autorizado.
+   1.4. "Cópia Licenciada" — a cópia individual do Software entregue ao Licenciado, e
+        qualquer Trabalho Derivado dela, únicos e rastreáveis a ele nos termos da cláusula 5.
+   1.5. "Trabalho Derivado" — qualquer modificação, adaptação, tradução, extensão,
+        combinação, fork ou obra baseada, no todo ou em parte, no Software, ainda que
+        substancialmente reescrita, renomeada ou com nova identidade visual.
+   1.6. "Afiliada" — qualquer pessoa que controle, seja controlada por, ou esteja sob
+        controle comum com o Licenciado, bem como seus sócios; Afiliadas não são partes
+        desta Licença e não gozam dos direitos aqui concedidos, salvo se cada uma adquirir
+        sua própria Cópia Licenciada.
+   1.7. "Cliente Final" — o terceiro a quem o Licenciado presta um Serviço com o Software,
+        e que apenas CONSOME o resultado desse Serviço, sem obter Controle do Software
+        (definição 1.10) nem cópia própria do Software ou de Trabalho Derivado.
+   1.8. "Serviço" — a funcionalidade, o resultado ou a experiência entregue pelo Licenciado
+        ao Cliente Final por meio de uma ou mais instâncias do Software operadas e
+        controladas pelo próprio Licenciado (por exemplo, mas sem se limitar a, operação em
+        modelo SaaS, hospedada ou gerenciada).
+   1.9. "Distribuição" ou "Distribuir" — disponibilizar o Software ou um Trabalho Derivado A
+        TERCEIROS NA FORMA DE SOFTWARE — isto é, entregar código-fonte, cópia executável,
+        imagem/contêiner, template, boilerplate, kit, ou exportar em massa configurações,
+        prompts de sistema, definições de agentes ou starter kits, ou qualquer artefato
+        apto a ser instalado, implantado ou executado por terceiro —, a qualquer título,
+        gratuita ou onerosamente. Prestar Serviço a Cliente Final, nos termos das definições
+        1.7 e 1.8, NÃO é Distribuição.
+   1.10. "Controle do Software" — a posse ou o acesso ao código-fonte, ao repositório, à
+        infraestrutura de implantação (deploy) ou à capacidade técnica de reimplantar,
+        exportar, extrair ou executar de forma autônoma o Software ou Trabalho Derivado. NÃO
+        constitui Controle do Software o mero uso funcional do Serviço pelo Cliente Final —
+        inclusive acessar a interface de uso, ajustar parâmetros ali disponibilizados ou
+        fornecer suas próprias chaves/credenciais de serviços de terceiros (BYO) — enquanto
+        o Licenciado permanece detentor do código-fonte, do repositório e da infraestrutura
+        de implantação.
+
+2. CONCESSÃO DE LICENÇA (O QUE VOCÊ PODE FAZER)
+
+   Sujeito ao cumprimento integral desta Licença, a Titular concede ao Licenciado uma
+   licença mundial, não exclusiva, intransferível, revogável e de prazo indeterminado
+   (perpétua enquanto cumpridas as condições) para:
+
+   a) usar e executar o Software para QUALQUER FIM, inclusive comercial e com finalidade
+      lucrativa, em quantas instâncias forem necessárias;
+   b) modificar o Software e criar Trabalhos Derivados, inclusive alterar livremente a
+      identidade visual, o nome e a marca aparentes na interface do produto (white-label);
+   c) OPERAR o Software — original ou Trabalho Derivado — para prestar Serviço a quantos
+      Clientes Finais desejar, inclusive em modelo SaaS, hospedado ou gerenciado, cobrando
+      por esse Serviço o que entender devido;
+   d) realizar cópias de segurança (backup) razoáveis da Cópia Licenciada.
+
+   Deixa-se expresso, para afastar dúvida: prestar Serviço a Clientes Finais e faturar por
+   esse Serviço é USO AUTORIZADO, ainda que o Software tenha sido profundamente modificado
+   ou rebrandado, e ainda que o Cliente Final utilize funcionalmente o Serviço (inclusive
+   forneça suas próprias chaves/credenciais), DESDE QUE o Licenciado permaneça com o
+   Controle do Software e este não seja Distribuído.
+
+3. CONDIÇÕES DA LICENÇA
+
+   A licença da cláusula 2 é concedida sob as seguintes condições:
+
+   a) o Licenciado deve deter o Controle do Software das instâncias usadas para prestar
+      Serviço; o Cliente Final não pode obter Controle do Software nem cópia própria do
+      Software ou de Trabalho Derivado;
+   b) o Licenciado deve manter íntegros, no CÓDIGO por ele mantido, este arquivo de Licença,
+      os avisos de direitos autorais e os identificadores de origem e rastreabilidade da
+      Cópia Licenciada (cláusula 5). A alteração de identidade visual permitida na cláusula
+      2(b) refere-se à INTERFACE apresentada ao Cliente Final, e não autoriza remover ou
+      adulterar tais avisos e identificadores no código.
+
+4. RESTRIÇÕES (O QUE VOCÊ NÃO PODE FAZER)
+
+   Salvo autorização prévia, expressa e por escrito da Titular (cláusula 8), é vedado ao
+   Licenciado, a qualquer título e ainda que gratuitamente:
+
+   a) DISTRIBUIR o Software ou qualquer Trabalho Derivado (definição 1.9);
+   b) revender, sublicenciar, alugar, ceder, transferir, publicar ou comercializar o
+      Software ou Trabalho Derivado como produto, template, boilerplate ou kit;
+   c) vender, ofertar, ministrar ou distribuir curso, treinamento, mentoria, consultoria ou
+      infoproduto QUANDO disso resulte que terceiro obtenha o Software ou Trabalho Derivado,
+      ou obtenha Controle de cópia própria, ou seja capacitado a Distribuir ou revender o
+      Software ou Trabalho Derivado — inclusive quando o Software ou Trabalho Derivado seja
+      entregue como material, modelo ou ponto de partida a terceiros;
+   d) habilitar, instruir ou capacitar terceiro a obter Controle de sua própria cópia do
+      Software ou de Trabalho Derivado, ou a prestar Serviço com cópia própria — o que
+      constitui Distribuição dissimulada;
+   e) estender ou compartilhar a licença, ou o uso do Software, com Afiliadas ou terceiros
+      que não tenham adquirido sua própria Cópia Licenciada;
+   f) remover, ocultar, alterar ou inutilizar, no código, os avisos de direitos autorais,
+      este arquivo de Licença ou os identificadores de origem e rastreabilidade da Cópia
+      Licenciada;
+   g) adotar qualquer meio técnico com o fim de burlar os termos desta Licença ou os
+      mecanismos de licenciamento, atribuição e rastreabilidade do Software.
+
+   Para afastar dúvida: monetizar o SERVIÇO é permitido (cláusula 2); monetizar o SOFTWARE
+   em si — original ou Trabalho Derivado — nas formas descritas nesta cláusula é vedado,
+   independentemente da extensão das modificações realizadas.
+
+5. RASTREABILIDADE E UNICIDADE DA CÓPIA
+
+   5.1. Cada Cópia Licenciada — e qualquer Trabalho Derivado dela — é única e
+        individualmente rastreável ao Licenciado que a adquiriu, por meios técnicos
+        incorporados ao Software no momento da entrega. O Licenciado reconhece e concorda
+        com a existência de tais meios.
+   5.2. Distribuir, compartilhar, publicar, vazar ou de qualquer forma disponibilizar a
+        Cópia Licenciada a terceiros em violação a esta Licença poderá ser comprovado
+        tecnicamente e atribuído de forma inequívoca ao Licenciado de origem.
+   5.3. PROTEÇÃO DE DADOS (LGPD — Lei nº 13.709/2018). Os identificadores de que trata esta
+        cláusula podem conter dados pessoais do Licenciado, tratados pela Titular para as
+        finalidades de execução desta Licença e de proteção de seus direitos de propriedade
+        intelectual contra uso não autorizado, com fundamento na execução de contrato e no
+        legítimo interesse da Titular (art. 7º, incisos V e IX, da LGPD). Contato do
+        Encarregado: nathan.lopes@awave.com.br. O detalhamento do tratamento consta da
+        Política de Privacidade da Titular, disponível em
+        https://claudecode.aprendausaria.com/privacidade.
+
+6. MARCAS E APRESENTAÇÃO (TRADE DRESS)
+
+   Esta Licença não concede direito de uso das marcas, nome, logotipos, identidade visual
+   ("Awave Agents", "Awave" e correlatos — marca objeto de pedido de registro perante o
+   INPI) ou apresentação comercial (trade dress) da Titular. É vedado ao Licenciado e a
+   terceiros oferecer, promover ou comercializar produto ou material que se apresente como o
+   Software, ou como oriundo/autorizado pela Titular, sem sua autorização prévia e por
+   escrito, sob pena de responsabilização por concorrência desleal (Lei nº 9.279/1996) e
+   violação de marca e nome empresarial. Esta cláusula não restringe o desenvolvimento
+   independente de software por terceiros que não utilize o Software, seu código ou seus
+   materiais.
+
+7. PROPRIEDADE INTELECTUAL
+
+   O Software é licenciado, não vendido. A Titular retém todos os direitos, títulos e
+   interesses sobre o Software, incluindo a integralidade dos direitos autorais e de
+   propriedade intelectual, protegidos pela Lei nº 9.609/1998 (Programa de Computador) e
+   pela Lei nº 9.610/1998 (Direitos Autorais). Nos termos do art. 29 da Lei nº 9.610/1998,
+   qualquer modalidade de utilização não expressamente autorizada por esta Licença depende
+   de autorização prévia e expressa da Titular. Os Trabalhos Derivados criados pelo
+   Licenciado permanecem sujeitos a esta Licença e não conferem ao Licenciado direito de
+   Distribuí-los ou comercializá-los como Software.
+
+8. LICENÇA COMERCIAL ALTERNATIVA
+
+   Os usos vedados pela cláusula 4 — em especial Distribuição, revenda, redistribuição,
+   sublicenciamento ou oferta como produto/curso — somente são admitidos mediante licença
+   comercial específica, negociada e concedida por escrito pela Titular. Para obtê-la,
+   contate nathan.lopes@awave.com.br.
+
+9. INDENIZAÇÃO E CLÁUSULA PENAL POR USO NÃO AUTORIZADO
+
+   9.1. A Distribuição, revenda ou comercialização não autorizada do Software ou de Trabalho
+        Derivado constitui violação de direitos autorais (Leis nº 9.609/1998 e nº
+        9.610/1998), sujeitando o infrator às sanções civis e penais cabíveis, à tutela
+        específica de cessação imediata da conduta e à apreensão das cópias irregulares.
+   9.2. Nos termos do art. 103, caput, da Lei nº 9.610/1998, o Licenciado que Distribuir ou
+        revender o Software ou Trabalho Derivado sem autorização pagará à Titular o preço de
+        cada cópia ou licença comercializada, assim considerado o MAIOR entre (i) o preço
+        praticado pelo próprio infrator e (ii) o preço de tabela vigente de uma Cópia
+        Licenciada.
+   9.3. Não se conhecendo o número de cópias ou licenças irregularmente comercializadas,
+        aplica-se a presunção do parágrafo único do art. 103 da Lei nº 9.610/1998,
+        equivalente ao valor de 3.000 (três mil) cópias.
+   9.4. A indenização dos itens 9.2 e 9.3 é cumulável com (e não excludente de): (a) os
+        lucros auferidos pelo infrator com a conduta; (b) as perdas e danos que a excederem
+        (art. 416, parágrafo único, e arts. 402 e 927 do Código Civil); e (c) indenização
+        por danos morais e à imagem e reputação da Titular.
+   9.5. Em qualquer hipótese, o valor total devido por violação da cláusula 4 não será
+        inferior a R$ 250.000,00 (duzentos e cinquenta mil reais) por violação apurada,
+        prevalecendo sempre o MAIOR entre este piso e os valores apurados nos itens
+        anteriores.
+   9.6. As partes reconhecem a razoabilidade e a proporcionalidade dos valores ora fixados
+        diante da natureza dos direitos protegidos e do potencial lesivo da conduta.
+        Verificado excesso manifesto no caso concreto, a penalidade contratual será reduzida
+        equitativamente (art. 413 do Código Civil), preservada sua exigibilidade no montante
+        reduzido e a validade da cláusula (cf. 15.1). A indenização legal do art. 103 não
+        constitui penalidade contratual e não se sujeita a essa redução.
+
+10. CESSÃO E SUCESSÃO
+
+    10.1. A licença é pessoal e intransferível. O Licenciado não pode ceder, transferir ou
+          onerar esta Licença ou a Cópia Licenciada sem consentimento prévio e por escrito
+          da Titular; a transferência não autorizada é nula e rescinde a Licença.
+    10.2. Em caso de sucessão (falecimento do Licenciado pessoa física), venda do
+          estabelecimento ou reorganização societária, a licença poderá ser transmitida ao
+          sucessor mediante notificação à Titular e aceitação, pelo sucessor, integral
+          destes termos.
+
+11. VERSIONAMENTO DA LICENÇA
+
+    11.1. A versão desta Licença aplicável a uma Cópia Licenciada é a vigente no momento de
+          sua aquisição/instalação, e permanece regendo aquela Cópia.
+    11.2. Novas versões da Licença aplicam-se a novas Cópias e a renovações. Alterações que
+          AMPLIEM os direitos do Licenciado podem ser aplicadas de imediato; alterações que
+          RESTRINJAM seus direitos dependem de novo aceite do Licenciado.
+    11.3. A atualização automática do Software (auto-update) não altera, por si só, a versão
+          da Licença aceita pelo Licenciado; a substituição do arquivo de Licença por uma
+          versão mais restritiva não vincula o Licenciado sem seu novo aceite.
+    11.4. Por conceder direitos mais amplos que as versões anteriores, esta versão 2.0
+          aplica-se também às Cópias Licenciadas adquiridas sob versões anteriores, que
+          passam a ser por ela regidas.
+
+12. RESCISÃO
+
+    12.1. Esta Licença vigora por prazo indeterminado enquanto o Licenciado a cumprir.
+    12.2. As violações graves — em especial Distribuição, revenda ou comercialização do
+          Software ou Trabalho Derivado (cláusula 4, "a" a "e"), e a remoção dolosa dos
+          avisos/identificadores (cláusula 4, "f") — rescindem a Licença automaticamente,
+          independentemente de aviso.
+    12.3. As demais violações, quando sanáveis, rescindem a Licença apenas se não sanadas em
+          15 (quinze) dias contados de notificação da Titular ao Licenciado.
+    12.4. O reembolso ou o estorno (chargeback) do preço pago encerra automaticamente a
+          licença, cessando o direito de uso.
+    12.5. Rescindida a Licença, o Licenciado deve cessar imediatamente todo uso e destruir
+          todas as cópias do Software em sua posse ou controle. As cláusulas 1, 4, 5, 6, 7,
+          9, 13, 14, 15 e 16 sobrevivem à rescisão.
+
+13. GARANTIAS
+
+    O Software é fornecido "no estado em que se encontra" (as is). A Titular não garante que
+    o Software atenderá a requisitos específicos do Licenciado nem que funcionará de forma
+    ininterrupta ou livre de erros. As garantias legais que não possam ser afastadas pela
+    legislação aplicável — em especial, quando cabível, as decorrentes do Código de Defesa do
+    Consumidor — permanecem íntegras e não são excluídas por esta cláusula.
+
+14. LIMITAÇÃO DE RESPONSABILIDADE
+
+    Na máxima extensão permitida pela legislação aplicável, e RESSALVADAS as hipóteses em que
+    a lei vede a limitação ou exclusão de responsabilidade — notadamente a responsabilidade
+    por vício ou defeito nas relações regidas pelo Código de Defesa do Consumidor e os casos
+    de dolo —, a Titular não responderá por danos indiretos ou lucros cessantes decorrentes
+    do uso ou da impossibilidade de uso do Software. Nada nesta Licença exclui ou limita
+    responsabilidade que não possa ser excluída ou limitada por lei.
+
+15. DISPOSIÇÕES GERAIS
+
+    15.1. Independência das cláusulas. A eventual invalidade ou inexequibilidade de qualquer
+          disposição não afeta as demais; a disposição afetada será interpretada e reduzida
+          na medida mínima necessária para torná-la válida, preservando ao máximo a intenção
+          das partes.
+    15.2. Não-renúncia. A tolerância da Titular quanto a qualquer violação não implica
+          renúncia, novação ou alteração desta Licença, podendo a Titular exigir o
+          cumprimento a qualquer tempo.
+    15.3. Integralidade. Esta Licença constitui o acordo integral entre as partes quanto ao
+          seu objeto e prevalece sobre entendimentos, promessas ou materiais de venda
+          anteriores ou de terceiros/afiliados.
+    15.4. Verificação de conformidade. Havendo indício fundado de violação da cláusula 4, a
+          Titular poderá solicitar ao Licenciado informações razoáveis para verificação, a
+          serem prestadas de boa-fé, respeitados o sigilo e a proporcionalidade.
+    15.5. Aceite. O aceite desta Licença dá-se por meio eletrônico, no ato da aquisição,
+          instalação ou uso do Software, vinculando o Licenciado à versão então vigente
+          (cláusula 11). Recomenda-se o registro da data e da versão aceitas.
+
+16. LEI APLICÁVEL E FORO
+
+    16.1. Esta Licença é regida e interpretada de acordo com as leis da República Federativa
+          do Brasil.
+    16.2. Sendo o Licenciado consumidor, nos termos do Código de Defesa do Consumidor, o foro
+          competente é o do domicílio do consumidor, na forma da lei, não se aplicando
+          eleição de foro que lhe seja prejudicial.
+    16.3. Não havendo relação de consumo, fica eleito o foro da comarca de São Paulo/SP para
+          dirimir controvérsias decorrentes desta Licença.
+
+──────────────────────────────────────────────────────────────────
+
+Awave Agents — by Nathan Lopes (@nathanlopes.ia).
+AWAVE CONSULTORIA E DESENVOLVIMENTO LTDA — CNPJ 61.847.563/0001-04.
+Para licenciamento comercial ou dúvidas sobre esta Licença: nathan.lopes@awave.com.br.

@@ -1,0 +1,4 @@
+.card:focus-visible { outline: 2px solid var(--wave-to); outline-offset: 2px; }
+.actionBtn { transition: background 120ms ease, color 120ms ease; }
+.actionBtn:hover { background: var(--surface-elevated); color: var(--text-primary); }
+.actionBtn:focus-visible { outline: 2px solid var(--wave-to); outline-offset: 1px; }

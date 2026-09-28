@@ -1,0 +1,72 @@
+node_modules
+.next
+.git
+# Worktrees de desenvolvimento: cada uma carrega a arvore inteira e o node_modules dela.
+# Sem esta linha o contexto do `docker build` passa de 5 GB e o smoke test da release
+# deixa de ser praticavel. O comprador nunca tem esta pasta; o custo era so nosso.
+.worktrees
+.env
+.env.*
+tests
+docs
+# supabase/ inteiro fora, MENOS as migrations (o migrate.mjs do boot precisa delas na imagem).
+# Precisa ser `supabase/*` + negação: um diretório-pai totalmente excluído não pode ser re-incluído.
+supabase/*
+!supabase/migrations
+scripts
+coverage
+.vscode
+.claude
+# Skills de DESENVOLVEDOR (ferramentas do Claude Code instaladas localmente via `npx skills`,
+# ex.: tdd, code-review, grilling) simbolicamente ligadas dentro de `skills/` — mesmo motivo
+# do `.gitignore` (bloco `/skills/<nome>/` logo acima dele): `skills/` E copiado pra imagem
+# (`COPY --from=build /app/skills ./skills` no Dockerfile), e só as SKILL.md de PRODUTO
+# (PT-BR, as 18 versionadas — starter kits que o comprador usa) podem entrar nela. Sem esta
+# lista, o smoke test da release builda uma imagem que NÃO é a que o comprador recebe (a
+# entrega sai do tarball da tag, então o smoke deixava de pegar o próprio problema que cria).
+# Redundante com o `.dockerignore` não excluir `skills/` inteiro E com a mesma lista já viver
+# no `.gitignore` (nunca commitadas) — mas o `.dockerignore` filtra o CONTEXTO do build por si
+# só, independente de git tracking, então a exclusão daqui precisa existir de qualquer jeito.
+/skills/ask-matt/
+/skills/claude-handoff/
+/skills/code-review/
+/skills/codebase-design/
+/skills/design-an-interface/
+/skills/diagnosing-bugs/
+/skills/domain-modeling/
+/skills/edit-article/
+/skills/git-guardrails-claude-code/
+/skills/grill-me/
+/skills/grill-with-docs/
+/skills/grilling/
+/skills/handoff/
+/skills/implement/
+/skills/improve-codebase-architecture/
+/skills/loop-me/
+/skills/migrate-to-shoehorn/
+/skills/obsidian-vault/
+/skills/prototype/
+/skills/qa/
+/skills/request-refactor-plan/
+/skills/research/
+/skills/resolving-merge-conflicts/
+/skills/scaffold-exercises/
+/skills/setup-matt-pocock-skills/
+/skills/setup-pre-commit/
+/skills/setup-ts-deep-modules/
+/skills/tdd/
+/skills/teach/
+/skills/to-spec/
+/skills/to-tickets/
+/skills/triage/
+/skills/ubiquitous-language/
+/skills/wayfinder/
+/skills/wizard/
+/skills/writing-beats/
+/skills/writing-fragments/
+/skills/writing-great-skills/
+/skills/writing-shape/
+dist
+*.png
+*.drawio
+*.log

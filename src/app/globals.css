@@ -1,0 +1,1208 @@
+@import "tailwindcss";
+
+:root {
+  --bg-base: #0A0B0D;
+  --surface: #131418;
+  --surface-elevated: #1A1C21;
+  --border-hairline: rgb(255 255 255 / 0.07);
+  --text-primary: #ECEDEF;
+  --text-secondary: #9598A0;
+  --text-tertiary: #5E616B;
+  /* Gradiente da marca: lê as vars injetadas pelo RootLayout (card Marca do
+     /config) com fallback pros valores de fábrica. Todos os consumidores de
+     var(--wave-*) respondem de graça; rgba() hardcoded inline e o shader WebGL
+     da Onda NÃO respondem (limitação aceita — documentada no card Marca). */
+  --wave-from: var(--brand-accent-from, #28E0C8);
+  --wave-to: var(--brand-accent-to, #7C5CFF);
+  --approve: #3FB984;
+  --reject: #E5634D;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --font-ui: 'Inter', sans-serif;
+  --font-display: 'DM Sans', sans-serif;
+  --font-serif: 'Newsreader', serif;
+}
+
+@theme inline {
+  --color-base: var(--bg-base);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-text: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-tertiary: var(--text-tertiary);
+  --color-approve: var(--approve);
+  --color-reject: var(--reject);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --font-ui: var(--font-ui);
+  --font-display: var(--font-display);
+  --font-serif: var(--font-serif);
+}
+
+html, body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar GLOBAL discreto — mata o scrollbar branco/gordo do SO no tema dark.
+   Padrão moderno (Chrome 121+/Firefox): `scrollbar-color` HERDA (html → tudo fica
+   dark) e `scrollbar-width: thin` no `*` afina todo scroller. O `.cc-scroll` é mais
+   específico e mantém o próprio tom ainda mais sutil nos feeds internos. */
+html { scrollbar-color: rgb(255 255 255 / 0.16) transparent; }
+* { scrollbar-width: thin; }
+/* Fallback webkit p/ browsers antigos (o Chrome novo ignora isto quando o padrão
+   acima está setado — por isso o padrão é a fonte da verdade). */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 0.16);
+  border-radius: 999px;
+  border: 3px solid transparent;   /* “padding” em volta do polegar → parece fino */
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover { background-color: rgb(255 255 255 / 0.26); }
+*::-webkit-scrollbar-corner { background: transparent; }
+
+* {
+  box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid var(--text-secondary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Navegador do Cérebro — a busca acende a borda com o gradiente da Onda quando
+   focada (o único momento de cor da tela, contido). */
+.brain-search:focus-within {
+  border-color: transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(120deg, var(--wave-from), var(--wave-to)) border-box;
+}
+
+/* Navegador do Cérebro — o traço da Onda acende de leve no hover/focus de uma
+   memória (presença viva, sem virar cor permanente). */
+.memory-card--browser:hover {
+  border-color: rgb(255 255 255 / 0.13);
+}
+.memory-card--browser:hover .memory-card__wave,
+.memory-card--browser:focus-within .memory-card__wave {
+  opacity: 0.9;
+}
+
+/* Scroller FANTASMA — transcript da /conversa, lista de histórico, painéis de card.
+   Fino e quase invisível em repouso, acende no hover do próprio scroller.
+
+   Era `display: none` (scrollbar totalmente escondida) e isso custava a AFFORDANCE:
+   sem trilho não dá pra arrastar de volta ao começo com o cursor nem enxergar que há
+   conversa acima — sobra roda do mouse e teclado. Queixa de comprador (Firefox/Ubuntu,
+   2026-08-06). Discreto continua sendo o objetivo; invisível não era. */
+.awave-scroll-fantasma {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.10) transparent;
+}
+.awave-scroll-fantasma:hover { scrollbar-color: rgb(255 255 255 / 0.22) transparent; }
+.awave-scroll-fantasma::-webkit-scrollbar { width: 8px; height: 8px; }
+.awave-scroll-fantasma::-webkit-scrollbar-track { background: transparent; }
+.awave-scroll-fantasma::-webkit-scrollbar-thumb {
+  background-color: rgb(255 255 255 / 0.10);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.awave-scroll-fantasma:hover::-webkit-scrollbar-thumb { background-color: rgb(255 255 255 / 0.22); }
+
+/* /conversa — split lado-a-lado: orb (palco dominante) | chat (painel quieto).
+   Em telas estreitas empilha: orb em cima, chat embaixo (com hairline no topo). */
+.conversa-split { display: flex; flex-direction: row; }
+/* Alça de largura do chat (borda esquerda do painel): invisível até o hover, quando mostra
+   uma linha fina com o acento da Onda. Some no empilhado (não há borda lateral para arrastar). */
+.conversa-alca-largura::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 4px;
+  width: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to bottom, #28E0C8, #7C5CFF);
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.conversa-alca-largura:hover::after,
+.conversa-alca-largura:active::after { opacity: 0.55; }
+@media (max-width: 880px) {
+  .conversa-split { flex-direction: column; }
+  .conversa-alca-largura { display: none; }
+  .conversa-chat {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    flex: 1 1 auto;
+    min-height: 38vh;
+    border-left: none !important;
+    border-top: 1px solid var(--border-hairline);
+  }
+}
+
+/* Command Center — o cockpit do dia. A página distribui banner + hero + equipe + a zona
+   inferior (feed ao vivo | precisa de você) e ROLA quando não cabe.
+   Era "uma tela" (altura travada, cards rolando por dentro) e isso caiu na revisão de
+   2026-09-04: o que não coubesse era espremido sem scroll para alcançar, e a última linha
+   de cada card ficava cortada ao meio, sem fim visível. Hoje cada card mostra um número
+   fixo de itens e termina num rodapé (.cc-vermais); quem rola é a página. */
+.cc-page {
+  /* A PÁGINA ROLA. Era `height: 100%` + `min-height: 0`, o "uma tela": o que não coubesse
+     era espremido em silêncio, sem scroll para alcançar. Bastava um banner no topo (avisos
+     presos, motor parado) para o feed ao vivo e a fila de aprovações caírem a 50px, e o
+     cockpit abria mostrando dois cabeçalhos e nada dentro. Medido ao vivo, relato do dono
+     com print (2026-09-04).
+     `min-height: 100%` mantém o visual de tela cheia quando cabe; `height: auto` deixa
+     crescer quando não cabe, e aí o <main> rola (ele já é o único container de scroll do
+     frame, ver AppFrame). Conteúdo espremido some sem avisar; conteúdo abaixo da dobra a
+     pessoa alcança. */
+  height: auto;
+  min-height: 100%;
+  /* Ocupa a área INTEIRA (feedback do user 2026-07-07: a coluna de 1180px deixava
+     preto sobrando dos lados). Cap alto só pra ultrawide não esticar ao absurdo. */
+  max-width: 1840px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2vw, 26px);
+  padding: clamp(20px, 2.2vw, 32px) clamp(24px, 2.6vw, 44px);
+}
+
+/* Scroll interno discreto (feed ao vivo, fila de aprovações) — fino, hairline,
+   trilho transparente; nunca aparece um scrollbar gordo do SO. */
+.cc-scroll {
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hairline) transparent;
+}
+.cc-scroll::-webkit-scrollbar { width: 6px; }
+.cc-scroll::-webkit-scrollbar-track { background: transparent; }
+.cc-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-hairline);
+  border-radius: 999px;
+}
+.cc-scroll:hover::-webkit-scrollbar-thumb { background: rgb(255 255 255 / 0.16); }
+
+/* Avisos presos por falta de canal (SemCanalBanner) — a fila por ASSUNTO.
+   Uma FAIXA de altura de conteúdo, não um painel: sem teto de altura, sem scroll interno
+   e sem nada que o flex do .cc-page possa esmagar. A versão anterior imprimia o texto de
+   cinco avisos e não existia altura certa para ela: teto grande comia o cockpit, teto
+   pequeno era esmagado pelo pai até a lista sumir (medido ao vivo: 195px de conteúdo dentro
+   de 6px). Com uma linha por assunto o card fica em ~110px e o problema deixa de existir. */
+.cc-avisos {
+  margin: 0 0 16px;
+  /* Não encolhe: o conteúdo é curto por construção, e o default (0 1 auto) deixava o pai
+     comer o card quando a página apertava. */
+  flex: 0 0 auto;
+  padding: 13px 16px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-hairline);
+  border-left: 2px solid var(--reject);
+  border-radius: var(--radius-sm);
+}
+.cc-avisos__topo {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+.cc-avisos__texto { min-width: 0; }
+.cc-avisos__titulo {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+.cc-avisos__sub {
+  margin: 3px 0 0;
+  max-width: 88ch;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.cc-avisos__cta {
+  flex: 0 0 auto;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-primary);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.cc-avisos__cta:hover {
+  background: rgb(255 255 255 / 0.06);
+  border-color: rgb(255 255 255 / 0.16);
+}
+/* Os assuntos: chips numa linha que QUEBRA (nunca rola, nunca corta). */
+.cc-avisos__grupos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.cc-avisos__grupo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-hairline);
+  border-radius: 999px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.cc-avisos__grupo--link:hover {
+  color: var(--text-primary);
+  border-color: rgb(255 255 255 / 0.18);
+}
+.cc-avisos__grupo--sobra {
+  background: none;
+  border-color: transparent;
+  color: var(--text-tertiary);
+  padding-left: 2px;
+}
+.cc-avisos__ir { color: var(--text-tertiary); font-size: 11px; }
+.cc-avisos__grupo--link:hover .cc-avisos__ir { color: var(--text-primary); }
+@media (max-width: 720px) {
+  .cc-avisos__topo { flex-direction: column; gap: 10px; }
+}
+
+/* Command Center v3 "Ponte de Comando" — hero compacto: a WaveLine atravessa o
+   topo; embaixo, saudação + narrativa + chip "N pra você". */
+.cc-hero {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Fileira da equipe — cards-porta do time contratado. Cabe = estática;
+   transbordou = MARQUEE automático (o track com 2 cópias desliza -50% em loop;
+   pausa no hover/focus pro clique). Base mantém scroll manual fino como
+   fallback (reduced-motion / offline, quando o React não põe --marquee). */
+.cc-crew {
+  overflow-x: auto;
+  padding: 2px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-hairline) transparent;
+}
+.cc-crew-track {
+  display: flex;
+  width: max-content;
+}
+.cc-crew-group {
+  display: flex;
+  flex: none;
+  gap: clamp(10px, 1.2vw, 14px);
+}
+.cc-crew--marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+}
+/* padding-right = gap → -50% do track cai EXATO no início da 2ª cópia. */
+.cc-crew--marquee .cc-crew-group { padding-right: clamp(10px, 1.2vw, 14px); }
+.cc-crew--marquee .cc-crew-track {
+  animation: cc-marquee var(--cc-marquee-dur, 40s) linear infinite;
+}
+.cc-crew--marquee:hover .cc-crew-track,
+.cc-crew--marquee:focus-within .cc-crew-track {
+  animation-play-state: paused;
+}
+@keyframes cc-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+/* Cinto-e-suspensório: mesmo se o React errar, reduced-motion nunca anima. */
+@media (prefers-reduced-motion: reduce) {
+  .cc-crew--marquee .cc-crew-track { animation: none; }
+}
+
+/* /loja/contratar — pulso discreto do StatusPill quando aguardando autorização OAuth.
+   Definido globalmente pra não repetir <style> inline por card (Fix 3). */
+@keyframes tkPulse { 0%, 100% { opacity: 0.35 } 50% { opacity: 1 } }
+
+/* Zona inferior: AO VIVO (estrela, larga) | PRECISA DE VOCÊ. Preenche a altura
+   restante; as listas rolam POR DENTRO (.cc-scroll). Empilha ≤1080px (one-page
+   é pro desktop largo, onde o operador trabalha — mesmo corte do /agentes). */
+.cc-main {
+  /* Altura PRÓPRIA, não "o que sobrou". Com a página rolando (ver `.cc-page`), herdar a
+     sobra não faz mais sentido: a sobra pode ser 50px num dia de banner e a zona sumia.
+     Altura definida também é o que faz os scrollers internos (`.cc-scroll` do feed e da
+     fila) terem contra o que rolar; com altura automática eles cresceriam com o conteúdo e
+     a página ficaria quilométrica. */
+  flex: 0 0 auto;
+  display: grid;
+  /* Feed pega TODO o resto; a fila tem teto (460px) pra não virar cards
+     esticados demais em tela cheia. */
+  grid-template-columns: minmax(0, 1fr) clamp(320px, 24vw, 460px);
+  gap: clamp(16px, 2vw, 26px);
+  /* `stretch`: as duas zonas têm a MESMA altura (pedido do dono, 2026-09-04). Com `start`
+     cada card ficava do tamanho do próprio conteúdo e a fila terminava bem abaixo do feed,
+     o que lia como um card sem fim. A altura da linha é a do card mais alto, e o rodapé de
+     cada um se ancora embaixo (`.cc-vermais` tem `margin-top: auto`), então os dois fecham
+     no mesmo lugar. */
+  align-items: stretch;
+}
+/* O RODAPÉ de um card do cockpit: o "Ver mais" do feed e o "Mais N esperando" da fila.
+   Existe para o card TERMINAR. Antes a lista rolava por dentro de uma altura herdada da
+   sobra da tela e a última linha aparecia cortada ao meio, sem nada dizendo se aquilo
+   acabou ali (relato do dono, 2026-09-04). Discreto de propósito: é um fim de leitura, não
+   uma ação competindo com o conteúdo. */
+.cc-vermais {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  /* `auto` e não um valor fixo: dentro de um card esticado ele desce para o FIM, e é isso
+     que faz os dois cards fecharem na mesma linha. O `10px` é o respiro mínimo quando o
+     conteúdo já preenche o card. */
+  margin-top: auto;
+  padding: 9px 12px;
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: none;
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.cc-vermais:hover {
+  color: var(--text-primary);
+  border-color: rgb(255 255 255 / 0.16);
+  background: rgb(255 255 255 / 0.03);
+}
+
+@media (max-width: 1080px) {
+  /* No estreito as duas zonas EMPILHAM, e aí altura fixa viraria duas caixas curtas uma
+     sobre a outra: cada uma cresce com o próprio conteúdo e quem rola é a página.
+     (A soltura da altura da página não está mais aqui: ela vale em toda largura.) */
+  .cc-main { grid-template-columns: 1fr; }
+}
+
+/* /agentes — console bento "uma tela": a página preenche a altura do <main> (preso
+   em 100dvh) e o grid de 3 colunas (roster | persona | direita) estica pra preencher.
+   Sem scroll de página — Skills/Diretrizes/Aprendizados rolam por dentro dos cards
+   (.cc-scroll). No estreito (≤1080px) a altura é solta e o <main> rola (one-page é
+   só pro desktop largo, onde o operador trabalha). */
+.agentes-page {
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(18px, 2.4vw, 30px) clamp(20px, 3vw, 40px);
+}
+.agentes-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(300px, 1.1fr) minmax(300px, 0.9fr);
+  gap: clamp(14px, 1.6vw, 20px);
+  align-items: stretch;
+}
+/* Coluna direita do modo técnico: o card "Responde a" é bento-card de altura de CONTEÚDO
+   (flex:0 0 auto), mas o bento-card-body nasce flex:1 1 0 e COLAPSA a ~0 (sem card esticado
+   que lhe dê espaço pra crescer) — o <select> ficava esmagado num corpo de ~16px, cortado.
+   Força o corpo a dimensionar pelo conteúdo (mesmo padrão do .treino-col-dir). Escopo na
+   coluna: NÃO toca o PersonaCard do meio (que PRECISA do corpo flex:1 1 0 pra o textarea
+   preencher e rolar). Report da comunidade #a5a20434. */
+.agentes-col-dir > .bento-card > .bento-card-body { flex: 0 0 auto !important; }
+@media (max-width: 1080px) {
+  .agentes-page { height: auto; min-height: 100%; }
+  .agentes-grid { flex: 0 0 auto; grid-template-columns: 1fr; align-items: start; }
+  /* Empilhado: solta o flex:1 1 0 dos cards (que dependia da altura fixa do desktop e
+     colapsaria a ~0 aqui) — cada card toma a altura do conteúdo e o <main> rola. */
+  .agentes-grid .bento-card { flex: none !important; }
+  .agentes-grid .bento-card-body { flex: none !important; overflow: visible !important; }
+}
+
+/* /agentes "O Palco" (modo leigo) — direção "Palco com elenco" (user 2026-07-07):
+   uma CENA viva (elenco em arco + herói no facho) + lâmina da ficha à direita. */
+.palco-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.62fr) minmax(336px, 0.9fr);
+  gap: clamp(14px, 1.6vw, 24px);
+  align-items: stretch;
+}
+.palco-shell--solo { grid-template-columns: 1fr; }
+
+/* A CENA — palco escuro com profundidade; elenco e herói vivem aqui (absolutos). */
+.palco-cena {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-hairline);
+  background:
+    radial-gradient(120% 78% at 50% 14%, rgba(124, 92, 255, 0.07), transparent 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 42%),
+    var(--bg-base);
+}
+
+/* Holofote — a luz da Onda que envolve o herói; respira. */
+.palco-holofote {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(62%, 520px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(40, 224, 200, 0.18), rgba(124, 92, 255, 0.13) 42%, transparent 70%);
+  filter: blur(46px);
+  pointer-events: none;
+  animation: awave-orb-breath 7s ease-in-out infinite;
+}
+/* Chão — reflexo elíptico faint sob o herói. */
+.palco-chao {
+  position: absolute;
+  left: 50%;
+  bottom: 7%;
+  width: min(58%, 500px);
+  height: 84px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(40, 224, 200, 0.10), transparent 68%);
+  filter: blur(20px);
+  pointer-events: none;
+}
+
+/* Elenco — camada do arco (os não-selecionados). */
+.palco-elenco { position: absolute; inset: 0; pointer-events: none; }
+.palco-elenco-item {
+  position: absolute;
+  transform: translate(-50%, -50%) scale(var(--elenco-scale, 1));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: left 0.55s cubic-bezier(0.22, 1, 0.36, 1), top 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.28s ease, opacity 0.5s ease, filter 0.2s ease;
+}
+.palco-elenco-item:hover,
+.palco-elenco-item:focus-visible {
+  transform: translate(-50%, -50%) scale(calc(var(--elenco-scale, 1) * 1.14));
+  opacity: 1 !important;
+  filter: brightness(1.12);
+  outline: none;
+}
+.palco-elenco-nome {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  max-width: 84px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Herói — o selecionado, no facho. O ANCHOR estático centraliza (o transform do
+   motion sobrescreveria um translate CSS); a `.palco-heroi` só empilha e é animada. */
+.palco-heroi-anchor {
+  position: absolute;
+  left: 50%;
+  top: 56%;
+  transform: translate(-50%, -50%);
+  width: min(90%, 420px);
+  display: flex;
+  justify-content: center;
+}
+.palco-heroi {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+}
+.palco-heroi-id { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.palco-heroi-nome {
+  font-family: var(--font-display);
+  font-size: clamp(26px, 2.6vw, 36px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--text-primary);
+}
+.palco-heroi-cargo { font-size: 14px; color: var(--text-secondary); }
+.palco-heroi-tag {
+  margin: 6px 0 0;
+  max-width: 340px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.palco-heroi-voz { margin-top: 4px; font-size: 12px; color: var(--text-tertiary); }
+.palco-heroi-acoes { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; justify-content: center; }
+.palco-btn-conversar {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-hairline);
+  background: var(--surface-elevated);
+}
+.palco-btn-conversar:hover { border-color: rgba(255, 255, 255, 0.16); }
+.palco-btn-estacao {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-hairline);
+  background: transparent;
+  opacity: 0.75;
+  transition: opacity 160ms ease, border-color 160ms ease;
+}
+.palco-btn-estacao:hover { opacity: 1; border-color: rgba(255, 255, 255, 0.14); }
+
+/* De férias — chip discreto no canto do palco + lista que expande pra cima (traz
+   o agente de volta ao facho, onde o toggle "ativo" o reativa). */
+.palco-ferias {
+  position: absolute;
+  left: 20px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  z-index: 3;
+}
+.palco-ferias-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: color-mix(in srgb, var(--surface-elevated) 70%, transparent);
+  border: 1px solid var(--border-hairline);
+  border-radius: 999px;
+  padding: 6px 13px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: border-color 0.15s, color 0.15s;
+}
+.palco-ferias-chip:hover { border-color: rgba(255, 255, 255, 0.16); color: var(--text-primary); }
+.palco-ferias-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--surface-elevated) 92%, transparent);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 12px 30px -8px rgb(0 0 0 / 0.5);
+  max-height: 260px;
+  overflow-y: auto;
+}
+.palco-ferias-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 5px 10px 5px 5px;
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s;
+}
+.palco-ferias-item:hover { background: var(--surface); }
+.palco-ferias-item-nome { font-size: 12.5px; color: var(--text-secondary); white-space: nowrap; }
+
+/* Desligados — quem saiu do time. Espelha o chip de férias (mesma linguagem), no canto
+   OPOSTO: são estados diferentes e ficar lado a lado convidaria a confundir os dois. */
+.palco-desligados {
+  position: absolute;
+  right: 20px;
+  bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  z-index: 3;
+}
+.palco-desligado-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 6px 8px 6px 10px;
+  border-radius: var(--radius-sm);
+}
+.palco-desligado-voltar {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-hairline);
+  border-radius: 999px;
+  padding: 3px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s;
+}
+.palco-desligado-voltar:hover:not(:disabled) { border-color: rgba(255, 255, 255, 0.18); color: var(--text-primary); }
+.palco-desligado-voltar:disabled { opacity: 0.5; cursor: default; }
+
+/* Desligar do time — o ato que MUDA a composição. Discreto por padrão (não compete
+   com "Conversar"); só o passo de confirmação usa o semântico de perigo. */
+.palco-btn-desligar {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-tertiary);
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-hairline);
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+.palco-btn-desligar:hover:not(:disabled) { color: var(--text-secondary); border-color: rgba(255, 255, 255, 0.14); }
+.palco-btn-desligar:disabled { opacity: 0.5; cursor: default; }
+.palco-btn-desligar-confirma {
+  color: var(--reject);
+  border-color: color-mix(in srgb, var(--reject) 45%, transparent);
+}
+.palco-btn-desligar-confirma:hover:not(:disabled) {
+  color: var(--reject);
+  border-color: var(--reject);
+}
+
+/* Empilha ≤1080: cena em cima (altura própria, já que os filhos são absolutos),
+   ficha embaixo; a página rola. */
+@media (max-width: 1080px) {
+  .palco-shell { grid-template-columns: 1fr; }
+  .palco-cena { min-height: clamp(440px, 62vh, 560px); }
+}
+
+/* /config — console de configuração: sidebar de seções (coluna própria, hairline à
+   direita como o Rail) | painel da seção ativa (rola por dentro; conteúdo em largura
+   de leitura, à esquerda, com atmosfera da Onda no respiro). Coeso com o Rail/agentes.
+   No estreito (≤1080px) a sidebar vira faixa de pills no topo. */
+.config-shell {
+  height: 100%;
+  min-height: 0;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+
+/* ── Sidebar de seções ──────────────────────────────────────────────────────
+   Coluna full-height espelhando o Rail: header (contexto) no topo, lista no meio,
+   ação de first-run no rodapé. Hairline à direita amarra visualmente ao conteúdo. */
+.config-nav {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-hairline);
+  padding: clamp(20px, 2.2vw, 30px) 14px 16px;
+  background: linear-gradient(180deg, rgb(255 255 255 / 0.014), rgb(255 255 255 / 0) 22%);
+  overflow-y: auto;
+}
+.config-nav__brand {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 0 8px; margin-bottom: 18px;
+}
+.config-nav__brand-word {
+  font-family: var(--font-display); font-size: 17px; font-weight: 600;
+  letter-spacing: -0.02em; color: var(--text-primary); line-height: 1;
+}
+.config-nav__eyebrow {
+  padding: 0 8px; margin-bottom: 11px;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--text-tertiary);
+}
+.config-nav__list { display: flex; flex-direction: column; gap: 3px; }
+/* item — espelha o .rail-link (mesmo idioma de nav do app). */
+.config-nav__item {
+  display: flex; align-items: center; gap: 11px;
+  padding: 8px 11px; border-radius: var(--radius-sm);
+  border: 1px solid transparent; background: transparent;
+  color: var(--text-secondary); font-family: var(--font-ui);
+  font-size: 13.5px; font-weight: 430; text-align: left; cursor: pointer; width: 100%;
+  transition: background 140ms ease, color 140ms ease;
+}
+.config-nav__item:hover { background: rgb(255 255 255 / 0.04); color: var(--text-primary); }
+.config-nav__item:hover .config-nav__ico { color: var(--text-secondary); opacity: 1; }
+.config-nav__item[aria-current='true'] {
+  background: var(--surface-elevated); color: var(--text-primary); font-weight: 540;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05);
+}
+.config-nav__ico {
+  display: inline-flex; flex-shrink: 0;
+  color: var(--text-tertiary); opacity: 0.85; transition: color 140ms ease, opacity 140ms ease;
+}
+.config-nav__item[aria-current='true'] .config-nav__ico { color: var(--wave-from); opacity: 1; }
+.config-nav__label { flex: 1; min-width: 0; }
+/* selos à direita do item */
+.config-nav__pending {
+  display: inline-flex; align-items: center; gap: 5px; flex-shrink: 0;
+  font-size: 11px; color: #d69e2e;
+}
+.config-nav__check { flex-shrink: 0; color: var(--approve); font-size: 12px; }
+
+/* ── Painel da seção ─────────────────────────────────────────────────────────
+   Rola por dentro; conteúdo em largura de leitura (à esquerda), com atmosfera da
+   Onda sutil no topo-direita (o espaço restante lê como respiro, não vazio). */
+.config-pane {
+  height: 100%; min-height: 0; position: relative;
+  overflow-y: auto;
+  padding: clamp(24px, 2.6vw, 40px) clamp(26px, 3.4vw, 60px) 0;
+}
+.config-atmos {
+  position: absolute; inset: 0; pointer-events: none; z-index: 0;
+  background:
+    radial-gradient(720px 440px at 90% -8%, rgb(124 92 255 / 0.06), transparent 60%),
+    radial-gradient(560px 380px at 64% -12%, rgb(40 224 200 / 0.045), transparent 62%);
+}
+.config-pane__inner {
+  position: relative; z-index: 1;
+  max-width: 780px;
+  display: flex; flex-direction: column; gap: clamp(18px, 1.8vw, 26px);
+  padding-bottom: 40px;
+}
+/* Header forte por seção — título display grande + descrição + aside (progresso). */
+.config-section__head { display: flex; flex-direction: column; gap: 7px; }
+.config-section__titlerow { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.config-section__title {
+  margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600;
+  letter-spacing: -0.015em; color: var(--text-primary);
+}
+.config-section__desc { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text-secondary); max-width: 62ch; }
+.config-section__body { display: flex; flex-direction: column; gap: 22px; }
+
+/* Inputs/selects do config acendem a borda com a Onda no foco (o único momento de
+   cor, contido — mesmo idioma da busca do Cérebro). */
+.config-pane input:focus,
+.config-pane select:focus {
+  border-color: transparent !important;
+  box-shadow: 0 0 0 1px rgb(40 224 200 / 0.5), 0 0 0 4px rgb(40 224 200 / 0.08);
+}
+
+/* Canais — cada canal vira um "dropdown" (Collapsible): resumo clicável (linha-card)
+   + o card do canal no corpo. Robusto: o corpo é só escondido, não desmontado. */
+.config-collapsible { display: flex; flex-direction: column; }
+.config-collapsible__summary {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 14px 15px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border-hairline); background: var(--surface);
+  color: var(--text-primary); font-family: var(--font-ui); cursor: pointer; text-align: left;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+.config-collapsible__summary:hover { border-color: rgb(255 255 255 / 0.14); background: var(--surface-elevated); }
+.config-collapsible__ico { display: inline-flex; flex-shrink: 0; color: var(--wave-from); }
+.config-collapsible__title { font-size: 14.5px; font-weight: 540; }
+.config-collapsible__sub { flex: 1; min-width: 0; font-size: 12.5px; color: var(--text-tertiary); }
+.config-collapsible__chev {
+  display: inline-flex; flex-shrink: 0; color: var(--text-tertiary);
+  transition: transform 200ms cubic-bezier(.2,.8,.2,1), color 150ms ease;
+}
+.config-collapsible__summary:hover .config-collapsible__chev { color: var(--text-secondary); }
+.config-collapsible__chev[data-open='true'] { transform: rotate(180deg); }
+.config-collapsible__body { margin-top: 10px; }
+
+/* Cards de escolha (ex.: repo — "Criar do zero" | "Usar um existente"). */
+.config-choice {
+  flex: 1 1 200px;
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 16px; border-radius: var(--radius-lg);
+  border: 1px solid var(--border-hairline); background: var(--surface-elevated);
+  color: var(--text-primary); font-family: var(--font-ui); cursor: pointer; text-align: left;
+  transition: border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+.config-choice:hover {
+  border-color: rgb(255 255 255 / 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px -16px rgb(124 92 255 / 0.5);
+}
+
+@media (max-width: 1080px) {
+  .config-shell { height: auto; min-height: 100%; grid-template-columns: 1fr; }
+  .config-nav {
+    height: auto; border-right: none; border-bottom: 1px solid var(--border-hairline);
+    padding: 16px 16px 12px;
+  }
+  .config-nav__brand { margin-bottom: 12px; }
+  .config-nav__list { flex-direction: row; overflow-x: auto; gap: 6px; padding-bottom: 2px; }
+  .config-nav__item { white-space: nowrap; flex: 0 0 auto; }
+  .config-nav__foot { margin-top: 14px; padding-top: 0; }
+  .config-pane { height: auto; overflow: visible; padding: 22px 18px 8px; }
+  .config-pane__inner { max-width: none; }
+}
+
+/* ── Rail (sidebar) ───────────────────────────────────────────────────────────
+   Estados de hover/foco que inline-styles não cobrem. A estrutura segue inline
+   no componente; aqui ficam só as transições e o realce com a cor da Onda. */
+
+/* Logo — o mark "respira" e ganha glow violeta no hover do wordmark. */
+.rail-logo { text-decoration: none; display: inline-flex; }
+.rail-logo__mark {
+  transition: transform 260ms cubic-bezier(.2,.8,.2,1), box-shadow 260ms ease,
+    border-color 260ms ease;
+}
+.rail-logo:hover .rail-logo__mark {
+  transform: translateY(-1px);
+  border-color: rgb(255 255 255 / 0.14);
+  box-shadow: 0 8px 22px -10px rgba(124,92,255,0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.10);
+}
+
+/* Item de nav — fundo suave no hover; ícone acende. O item ATIVO
+   (.rail-link--active) já vem com fundo elevado + ícone teal inline; o hover é
+   propositalmente MAIS FRACO que o ativo, pra os dois não se confundirem. */
+.rail-link { transition: background 140ms ease, color 140ms ease; }
+.rail-link:hover { background: rgb(255 255 255 / 0.04); color: var(--text-primary); }
+.rail-link:hover .rail-link__ico { color: var(--text-secondary); opacity: 1; }
+/* Ativo: hairline interno sutil dá profundidade sem virar "barra" ruidosa. */
+.rail-link--active { box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.05); }
+.rail-link--active:hover { background: var(--surface-elevated); }
+
+/* Busca (promovida pro topo) — borda e ícone acendem no hover. */
+.rail-search { transition: border-color 150ms ease, background 150ms ease; }
+.rail-search:hover { border-color: rgb(255 255 255 / 0.16); background: rgb(255 255 255 / 0.045); }
+.rail-search__ico { color: var(--text-tertiary); transition: color 150ms ease; }
+.rail-search:hover .rail-search__ico { color: var(--text-secondary); }
+
+/* Card do assistente — a affordance "tocar pra falar". Bloco COESO que mata a
+   sopa de divisórias antiga: fundo com leve tinta da Onda + hairline; no hover a
+   borda acende, sobe 1px e ganha um glow violeta suave. */
+.rail-assistant {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 11px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-hairline);
+  background:
+    linear-gradient(180deg, rgba(124,92,255,0.05), rgba(40,224,200,0.035)),
+    var(--surface);
+  font: inherit;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+.rail-assistant:hover {
+  border-color: rgb(255 255 255 / 0.14);
+  box-shadow: 0 8px 26px -14px rgba(124,92,255,0.55),
+    inset 0 1px 0 rgb(255 255 255 / 0.05);
+  transform: translateY(-1px);
+}
+.rail-assistant__head { display: flex; align-items: center; gap: 7px; width: 100%; }
+
+/* Crédito — o @handle vira gradiente da Onda no hover (link p/ Instagram). */
+.rail-credit__link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+.rail-credit__link:hover {
+  background: linear-gradient(110deg, var(--wave-from), var(--wave-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* ── Keyframes globais (awave-*) ─────────────────────────────────────────────
+   Centralizados aqui para evitar duplicação por instância de componente.
+   Skeleton, OfflineBanner, DemoTrigger e ToolErrorCard referenciam pelo nome. */
+
+@keyframes awave-live-dot {
+  0%, 100% { opacity: 0.45; transform: scale(0.82); box-shadow: 0 0 0 0 rgba(40,224,200,0.0); }
+  50%      { opacity: 1;    transform: scale(1);    box-shadow: 0 0 8px 1px rgba(40,224,200,0.45); }
+}
+
+@keyframes awave-shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes awave-reconnect {
+  0%, 100% { opacity: 0.35; }
+  50%       { opacity: 1; }
+}
+
+@keyframes awave-demo-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.85); }
+  50%      { opacity: 1;    transform: scale(1); }
+}
+
+@keyframes awave-retry-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Respiração do halo do orb-herói do /agentes (O Palco). */
+@keyframes awave-orb-breath {
+  0%, 100% { opacity: 0.6; transform: scale(0.97); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Grafo do Cérebro — pulso de boas-vindas da memória mais recente (herói) e
+   anel de "fresca" (<24h). Único momento de cor extra: o gradiente da Onda.
+   Nota: animar o atributo SVG `r` via CSS funciona em Chromium/Firefox modernos;
+   Safari ≤15.3 não suporta (degrada para "sem pulso", sem quebrar). Alvo v1 =
+   navegador moderno; se precisar, trocar por transform: scale() + transform-box. */
+/* r: 9 = R_NOTE, 30 = R_CORE em BrainGraph.tsx (CSS não lê constante TS —
+   manter em sincronia se os raios mudarem). */
+@keyframes awave-graph-pulse {
+  0%   { r: 9;  opacity: 0.6; }
+  70%  { r: 30; opacity: 0;   }
+  100% { r: 30; opacity: 0;   }
+}
+.brain-node__pulse { animation: awave-graph-pulse 2.4s ease-out 0.9s infinite; }
+.brain-node__fresh { stroke: url(#brainWave); stroke-opacity: 0.55; }
+
+/* Sinapse — faísca de luz (segmento curto) que viaja pela conexão como um
+   impulso neural. pathLength=1 normaliza o comprimento; o dash curto + offset
+   animado fazem a luz percorrer a linha; opacity acende/apaga nas pontas.
+   Cada aresta usa --pulse-dur/--pulse-delay próprios → o cérebro "dispara" em
+   ritmos diferentes. O @media reduced-motion global já zera a animação. */
+@keyframes brain-synapse {
+  0%   { stroke-dashoffset: 1; opacity: 0; }
+  14%  { opacity: 1; }
+  86%  { opacity: 1; }
+  100% { stroke-dashoffset: 0; opacity: 0; }
+}
+.brain-edge__pulse {
+  stroke-dasharray: 0.05 1;
+  animation: brain-synapse var(--pulse-dur, 3s) linear var(--pulse-delay, 0s) infinite;
+}
+
+/* Reveal do grafo — fade-in único da camada de nós ao montar. À PROVA DE TUDO:
+   o @media reduced-motion acima zera a animação → os nós ficam no opacity
+   natural (1), visíveis. A visibilidade NUNCA depende de relógio/JS. */
+@keyframes brain-fade-in { from { opacity: 0 } to { opacity: 1 } }
+.brain-fade-in { animation: brain-fade-in 0.7s ease both; }
+
+/* Linha clicável no NodePanel (lista de memórias/pastas) — acende no hover. */
+.brain-panel-row { transition: border-color 140ms ease, background 140ms ease; }
+.brain-panel-row:hover {
+  border-color: rgb(255 255 255 / 0.16);
+  background: var(--surface-elevated);
+}
+
+/* ── /organograma — pulso de energia nas arestas ─────────────────────────────
+   Aresta cujo subordinado tem tarefa running: um segundo path (gradiente da
+   Onda) com dash animado "descendo" a linha. Reduced-motion: a animação para,
+   o traço gradiente ESTÁTICO fica (o sinal não se perde — spec §1). */
+.org-aresta-pulso {
+  stroke-dasharray: 7 15;
+  animation: org-pulso 1.4s linear infinite;
+}
+@keyframes org-pulso {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+/* O globals já mata TODA animação em reduced-motion (`* { animation: none
+   !important }`) — mas o dash parado viraria uma linha pontilhada fraca.
+   Aqui o traço vira SÓLIDO: o sinal "trabalhando" fica forte e estático. */
+@media (prefers-reduced-motion: reduce) {
+  .org-aresta-pulso {
+    stroke-dasharray: none;
+  }
+}
+
+/* ── /inbox: console bento 3 colunas, sem scroll de página ──
+   Espelha o .agentes-*: a página preenche a altura do <main> (100dvh) e as
+   3 colunas (conversas | thread | ficha) esticam; listas/thread rolam por
+   dentro dos cards (.cc-scroll). No estreito (≤1080px) empilha e o <main>
+   rola. */
+.inbox-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(18px, 2.4vw, 30px) clamp(20px, 3vw, 40px);
+}
+.inbox-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) minmax(360px, 1.4fr) minmax(260px, 0.8fr);
+  gap: clamp(14px, 1.6vw, 20px);
+  align-items: stretch;
+}
+/* Dossiê de handoff (F8): card de altura de CONTEÚDO na coluna 3. O bento-card-body
+   nasce `flex:1 1 0` e, dentro de um card `flex:0 0 auto`, o basis 0 COLAPSA o corpo a
+   ~0 — o painel aparecia como uma faixa com o texto cortado, justamente o que o operador
+   mais precisa ler. Mesmo remendo do .agentes-col-dir (globals.css §modo técnico).
+   O card "Conversa" (F10) entra na mesma regra: ele carrega o status, as ações e o aviso
+   de follow-up agendado — informação que decide se uma mensagem sai sozinha. Estava sendo
+   esmagado a ~60px porque o card "Cliente" crescia (`flex:1 1 auto`) e comia a coluna. */
+.inbox-dossie > .bento-card-body,
+.inbox-conversa > .bento-card-body { flex: 0 0 auto !important; overflow: visible !important; }
+
+@media (max-width: 1080px) {
+  .inbox-page { height: auto; }
+  .inbox-grid { grid-template-columns: 1fr; }
+  /* Empilhado: solta o flex dos cards (que dependia da altura fixa do desktop
+     e colapsaria a ~0 aqui) — cada card toma a altura do conteúdo e o <main>
+     rola (mesmo padrão do .agentes-grid). */
+  .inbox-grid .bento-card { flex: none !important; }
+  .inbox-grid .bento-card-body { flex: none !important; overflow: visible !important; }
+  .inbox-grid .bento-card-body .cc-scroll { max-height: 60vh; }
+}
+
+/* ── /inbox: botão de erro (polegar-pra-baixo) — aparece só no hover da bolha ── */
+.bolha-erro-btn {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+/* Pai imediato é o <span> de ticks; o hover funciona no container da bolha. */
+*:hover > .bolha-erro-btn,
+.bolha-erro-btn:focus-within {
+  opacity: 1;
+}
+
+/* ── /inbox aba Base de conhecimento: 2 colunas (lista | editor+testar) ──
+   Mesma one-page do resto do /inbox: as colunas ESTICAM na altura do <main> e o
+   conteúdo rola POR DENTRO dos cards. Aqui havia `align-items: start`, que dá aos
+   cards altura de CONTEÚDO — e aí o `.bento-card-body` (nasce flex:1 1 0 com
+   min-height:0) não contribui altura nenhuma e colapsa nos ~16px do padding: a
+   lista virava meia linha e o editor sumia atrás do `overflow:hidden` do card.
+   Mesmo colapso já visto no `.agentes-col-dir`. */
+.base-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(14px, 1.6vw, 20px);
+  align-items: stretch;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+/* Coluna esquerda: "ensinar" tem altura de conteúdo (com teto, pra uma revisão de
+   import longa não engolir a coluna) e a LISTA preenche todo o resto. */
+.base-col-esq {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+  min-width: 0;
+}
+/* Teto em % da COLUNA (não vh): numa revisão de import longa o "ensinar" rola por
+   dentro e a lista continua sendo a estrela da tela. */
+.base-ensinar { flex: 0 1 auto; max-height: 42%; }
+/* !important: o corpo nasce com `flex: 1 1 0` INLINE (no componente Card) — sem isto
+   a regra perde pro inline e o card do "ensinar" fica com 16px de corpo. */
+.base-ensinar > .bento-card-body { flex: 0 1 auto !important; }
+.base-lista { flex: 1 1 auto; min-height: 180px; }
+@media (max-width: 1080px) {
+  /* Empilhado: solta o flex dos cards (que dependia da altura fixa do desktop) —
+     cada card toma a altura do conteúdo e o <main> rola. */
+  .base-grid { grid-template-columns: 1fr; flex: 0 0 auto; align-items: start; }
+  .base-grid .bento-card { flex: none !important; max-height: none !important; }
+  .base-grid .bento-card-body { flex: none !important; overflow: visible !important; }
+}
+
+/* ── /treino: índice de atendentes + sala de treino (2 colunas fila | painel) ── */
+.treino-index-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(18px, 2.4vw, 30px) clamp(20px, 3vw, 40px);
+}
+
+/* Card de atendente no índice — hover por CSS (o card é Server Component: nada de handlers JS). */
+.treino-atendente-card {
+  background: var(--surface);
+  border: 1px solid var(--border-hairline);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.18s, background 0.18s;
+}
+.treino-atendente-card:hover {
+  border-color: rgb(40 224 200 / 0.32);
+  background: var(--surface-elevated);
+}
+
+.treino-sala-page {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(14px, 1.8vw, 22px);
+  padding: clamp(18px, 2.4vw, 30px) clamp(20px, 3vw, 40px);
+}
+
+/* Fila (esquerda) + Treinador (direita) + Placar (rodapé estreito da direita).
+   Em telas largas: 2 colunas fixas. Em estreitas: empilha e o <main> rola. */
+.treino-grid {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(280px, 340px) 1fr;
+  gap: clamp(14px, 1.6vw, 20px);
+  align-items: stretch;
+}
+
+@media (max-width: 1080px) {
+  .treino-sala-page { height: auto; }
+  .treino-grid {
+    grid-template-columns: 1fr;
+  }
+  .treino-grid .bento-card { flex: none !important; }
+  .treino-grid .bento-card-body { flex: none !important; overflow: visible !important; }
+  .treino-grid .bento-card-body .cc-scroll { max-height: 60vh; }
+}
+
+/* Coluna direita da Sala (Treinador + Placar + Aprendizados). O corpo do bento-card é
+   flex:1 1 0 INLINE — sem altura definida ele COLAPSA a 0 e o card vira só o header,
+   clipando o conteúdo (Placar/Aprendizados sumiam na borda de baixo). `!important` p/
+   vencer o estilo inline; o corpo dimensiona pelo CONTEÚDO e a COLUNA (.treino-col-dir)
+   rola quando resultado alto + aprendizados passam da altura. */
+.treino-col-dir > .bento-card > .bento-card-body { flex: 0 0 auto !important; }

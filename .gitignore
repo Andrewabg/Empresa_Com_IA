@@ -1,0 +1,75 @@
+node_modules
+# Ambiente: TODAS as variacoes. Ignorar so `.env` deixava `.env.local` e `.env.production`
+# entrarem num `git add` sem aviso, e este arquivo viaja para o repo do comprador.
+.env*
+!.env.example
+dist
+.next
+supabase/.temp
+supabase/.branches
+.playwright-mcp
+.worktrees
+*.tmp
+# logs de saída de teste/build (ex.: tests-full.log) — artefato, nunca produto
+*.log
+# screenshots de eyeball (Playwright) caem na raiz — nunca são produto
+/*.png
+# --- Tooling de dev do Claude Code / skills de autoria em inglês — NUNCA produto ---
+# skills/ é copiado pra imagem Docker; só as SKILL.md de PRODUTO (PT-BR) podem entrar.
+# Estas pastas são ferramentas de dev instaladas localmente (npx skills) — ignorar
+# pra nunca vazarem pro container do comprador via um `git add -A` acidental.
+.claude/*
+# Exceção única: a skill tickets (cópia do dashaluno) é ferramenta de dev do time,
+# versionada para todo dev ter. .claude/ nunca vai no zip do comprador (isInternalPath
+# no Hub e no scripts/gen-manifest.mjs), então isto não chega ao cliente.
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/tickets/
+# E as regras ask do Claude Code para status/responder da skill tickets.
+!.claude/settings.json
+# Rascunhos de resposta da skill tickets: texto de aluno, nunca vai para o git.
+.tickets/
+.agents/
+skills-lock.json
+/skills/ask-matt/
+/skills/claude-handoff/
+/skills/code-review/
+/skills/codebase-design/
+/skills/design-an-interface/
+/skills/diagnosing-bugs/
+/skills/domain-modeling/
+/skills/edit-article/
+/skills/git-guardrails-claude-code/
+/skills/grill-me/
+/skills/grill-with-docs/
+/skills/grilling/
+/skills/handoff/
+/skills/implement/
+/skills/improve-codebase-architecture/
+/skills/loop-me/
+/skills/migrate-to-shoehorn/
+/skills/obsidian-vault/
+/skills/prototype/
+/skills/qa/
+/skills/request-refactor-plan/
+/skills/research/
+/skills/resolving-merge-conflicts/
+/skills/scaffold-exercises/
+/skills/setup-matt-pocock-skills/
+/skills/setup-pre-commit/
+/skills/setup-ts-deep-modules/
+/skills/tdd/
+/skills/teach/
+/skills/to-spec/
+/skills/to-tickets/
+/skills/triage/
+/skills/ubiquitous-language/
+/skills/wayfinder/
+/skills/wizard/
+/skills/writing-beats/
+/skills/writing-fragments/
+/skills/writing-great-skills/
+/skills/writing-shape/
+
+# Workspace do subagent-driven-development (scratch por plano; nao versionado)
+.superpowers/

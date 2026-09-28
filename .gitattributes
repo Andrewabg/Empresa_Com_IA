@@ -1,0 +1,25 @@
+# Scripts de shell SEMPRE em LF — rodam num container Linux; CRLF quebra o
+# interpretador (`sleep 300\r`, `server.js\r` → erro). Blinda contra checkout no
+# Windows (core.autocrlf=true) antes de um docker build.
+*.sh text eol=lf
+docker-entrypoint.sh text eol=lf
+
+# Os `.mjs` da RAIZ entram na imagem pelo mesmo `COPY` do entrypoint (Dockerfile) e rodam
+# no container Linux. O Node tolera CRLF em JS, então aqui é latente e não ativo como no
+# `.sh` — mas o raciocínio é idêntico e a linha é barata. Sem isto, um checkout no Windows
+# (`core.autocrlf=true`) escreve CRLF no contexto de build.
+*.mjs text eol=lf
+
+# PDFs são binários — NUNCA converter EOL (fixtures como o contrato-teste.pdf têm
+# offsets de byte na xref; CRLF num checkout Windows quebraria a estrutura).
+*.pdf binary
+
+# Fontes são binárias pelo MESMO motivo, e aqui a falha é pior que a do PDF: um .ttf com EOL
+# convertido continua sendo um arquivo, e o `registerFromPath` do canvas simplesmente devolve
+# null. O texto sai numa fonte de sistema, a peça fica pronta, e ninguém descobre.
+*.ttf binary
+*.otf binary
+
+# Skill tickets (copia do dashaluno): o script tem shebang, e CRLF quebra o import direto.
+.claude/skills/tickets/scripts/tickets.mjs text eol=lf
+.claude/skills/tickets/scripts/tickets.d.mts text eol=lf
