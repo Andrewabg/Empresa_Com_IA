@@ -1,1 +1,5 @@
 /* Seu CSS extra. Carregado em todas as telas. */
+button[title="Toque para ver o Nathan agir ao vivo"],
+.cc-avisos {
+  display: none !important;
+}
